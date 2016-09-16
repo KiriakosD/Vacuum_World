@@ -60,6 +60,8 @@ class MyAgentState
 	public static final int SOUTH = 2;
 	public static final int WEST = 3;
 	public int agent_direction = EAST;
+
+	public int stage = 0;
 	
 	MyAgentState()
 	{
@@ -186,10 +188,10 @@ class MyAgentProgram implements AgentProgram {
 	    Boolean dirt = (Boolean)p.getAttribute("dirt");
 	    Boolean home = (Boolean)p.getAttribute("home");
 	    System.out.println("percept: " + p);
-	    
-	    // State update based on the percept value and the last action
-	    state.updatePosition((DynamicPercept)percept);
-	    if (bump) {
+
+		// State update based on the percept value and the last action
+		state.updatePosition((DynamicPercept)percept);
+		if (bump) {
 			switch (state.agent_direction) {
 			case MyAgentState.NORTH:
 				state.updateWorld(state.agent_x_position,state.agent_y_position-1,state.WALL);
@@ -214,6 +216,7 @@ class MyAgentProgram implements AgentProgram {
 	    
 	    
 	    // Next action selection based on the percept value
+
 	    if (dirt)
 	    {
 	    	System.out.println("DIRT -> choosing SUCK action!");
@@ -222,17 +225,46 @@ class MyAgentProgram implements AgentProgram {
 	    } 
 	    else
 	    {
-	    	if (bump)
-	    	{
-	    		state.agent_last_action=state.ACTION_NONE;
-		    	return NoOpAction.NO_OP;
+			if ((bump) && (state.stage == 0)) {
+				state.stage = 1;
 	    	}
-	    	else
-	    	{
-	    		state.agent_last_action=state.ACTION_MOVE_FORWARD;
-	    		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-	    	}
-	    }
+			if (state.stage == 0) {
+				System.out.println("stage = 0!!!");
+				if (state.agent_direction == state.NORTH) {
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}
+				/*else if ((state.agent_direction != state.NORTH) && (state.agent_last_action == state.ACTION_TURN_LEFT)) {
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}*/
+				else {
+					state.agent_last_action=state.ACTION_TURN_LEFT;
+					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				}
+			}
+			else if (state.stage == 1)  {
+				System.out.println("stage = 1!!!");
+				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.agent_direction == state.NORTH)) {
+					state.agent_last_action=state.ACTION_TURN_RIGHT;
+					return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				}
+				else if (state.agent_last_action == state.ACTION_TURN_RIGHT) {
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}
+				else if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.agent_direction == state.EAST)) {
+					state.agent_last_action=state.ACTION_TURN_LEFT;
+					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				}
+				else if (state.agent_last_action == state.ACTION_TURN_LEFT) {
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}
+			}
+			state.agent_last_action=state.ACTION_MOVE_FORWARD;
+			return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+		}
 	}
 }
 
