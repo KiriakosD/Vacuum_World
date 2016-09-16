@@ -287,10 +287,6 @@ class MyAgentProgram implements AgentProgram {
 					state.agent_last_action=state.ACTION_MOVE_FORWARD;
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
-				/*else if ((state.agent_direction != state.NORTH) && (state.agent_last_action == state.ACTION_TURN_LEFT)) {
-					state.agent_last_action=state.ACTION_MOVE_FORWARD;
-					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-				}*/
 				else {
 					state.agent_last_action=state.ACTION_TURN_LEFT;
 					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
