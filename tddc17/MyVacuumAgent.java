@@ -271,7 +271,7 @@ class MyAgentProgram implements AgentProgram {
 
 			// Checking if we should go to stage 2
 	    	if ((state.memory[state.agent_x_position][state.agent_y_position] == state.MAXIY) && (state.stage == 1)) {
-	    		if (state.calculateExplored() > 25) {
+	    		if (state.calculateExplored() > 25) { // 25 is a random minimum number and perhaps should be reconsidered
 	    			state.stage = 2;
 	    		}
 	    	}
