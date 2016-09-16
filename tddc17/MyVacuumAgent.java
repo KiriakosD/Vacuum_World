@@ -54,6 +54,7 @@ class MyAgentState
 	public int agent_x_position = 1;
 	public int agent_y_position = 1;
 	public int agent_last_action = ACTION_NONE;
+	public int old_action = ACTION_NONE;
 	
 	public static final int NORTH = 0;
 	public static final int EAST = 1;
