@@ -298,31 +298,31 @@ class MyAgentProgram implements AgentProgram {
 					state.agent_last_action=state.ACTION_TURN_LEFT;
 					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
 				}
-				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.old_action == state.ACTION_TURN_RIGHT) && (!bump)) {
-					state.old_action = state.agent_last_action;
+				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.agent_old_action == state.ACTION_TURN_RIGHT) && (!bump)) {
+					state.agent_old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_TURN_LEFT;
 					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
 				}
 				else if ((state.agent_last_action == state.ACTION_MOVE_FORWARD)) {
-					state.old_action = state.agent_last_action;
+					state.agent_old_action = state.agent_last_action;
 					if (bump) {
-						state.old_action = state.agent_last_action;
+						state.agent_old_action = state.agent_last_action;
 						state.agent_last_action=state.ACTION_TURN_RIGHT;
 						return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
 					}
 					else {
-						state.old_action = state.agent_last_action;
+						state.agent_old_action = state.agent_last_action;
 						state.agent_last_action=state.ACTION_TURN_LEFT;
 						return LIUVacuumEnvironment.ACTION_TURN_LEFT;
 					}
 				}
 				else if (state.agent_last_action == state.ACTION_TURN_RIGHT) {
-					state.old_action = state.agent_last_action;
+					state.agent_old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_MOVE_FORWARD;
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
 				else if (state.agent_last_action == state.ACTION_TURN_LEFT) {
-					state.old_action = state.agent_last_action;
+					state.agent_old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_MOVE_FORWARD;
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
