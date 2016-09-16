@@ -255,19 +255,23 @@ class MyAgentProgram implements AgentProgram {
 			}
 			else if (state.stage == 1)  {
 				System.out.println("stage = 1!!!");
-				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.agent_direction == state.NORTH)) {
+				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.old_action == state.ACTION_TURN_RIGHT) && (!bump)) {
+					state.old_action = state.agent_last_action;
+					state.agent_last_action=state.ACTION_TURN_LEFT;
+					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				}
+				else if ((state.agent_last_action == state.ACTION_MOVE_FORWARD)) {
+					state.old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_TURN_RIGHT;
 					return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
 				}
 				else if (state.agent_last_action == state.ACTION_TURN_RIGHT) {
+					state.old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_MOVE_FORWARD;
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
-				else if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.agent_direction == state.EAST)) {
-					state.agent_last_action=state.ACTION_TURN_LEFT;
-					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
-				}
 				else if (state.agent_last_action == state.ACTION_TURN_LEFT) {
+					state.old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_MOVE_FORWARD;
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
