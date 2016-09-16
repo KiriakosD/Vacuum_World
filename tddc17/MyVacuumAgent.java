@@ -9,6 +9,33 @@ import aima.core.agent.impl.*;
 
 import java.util.Random;
 
+
+/*TO_DO_LIST
+
+*  stage == 0
+- First turn North
+- Update max_X, max_Y, min_X and min_Y after every FORWARD 		max_y_xy (the position of the max y)
+- if (y position > max_y) then go forward (north)
+- if position is updated then update x,y for max_y
+- Go North until bump
+- If bump north, turn RF, LF
+- If bump after RF, skip the LF
+- If bump after LF, you do a RF, LF
+- If !bump after LF, you do a LF again
+- stage == -1 tempstage = 0
+
+* TRANSITION (stage = -1)
+- try to go to target layer with the above rules
+ - if target layer reached then stage = tempstage + 1
+
+*  INSIDE ((if stage== 1) && (layer == something))
+-
+-
+-
+-
+*
+*/
+
 class MyAgentState
 {
 	public int[][] world = new int[30][30];
