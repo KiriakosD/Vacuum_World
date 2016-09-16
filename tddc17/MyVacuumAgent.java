@@ -255,6 +255,10 @@ class MyAgentProgram implements AgentProgram {
 			}
 			else if (state.stage == 1)  {
 				System.out.println("stage = 1!!!");
+				if (state.agent_last_action == state.ACTION_SUCK) {
+					state.agent_last_action=state.ACTION_TURN_LEFT;
+					return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				}
 				if ((state.agent_last_action == state.ACTION_MOVE_FORWARD) && (state.old_action == state.ACTION_TURN_RIGHT) && (!bump)) {
 					state.old_action = state.agent_last_action;
 					state.agent_last_action=state.ACTION_TURN_LEFT;
