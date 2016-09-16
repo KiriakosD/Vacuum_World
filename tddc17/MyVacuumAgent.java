@@ -172,6 +172,16 @@ class MyAgentProgram implements AgentProgram {
 		
     	// This example agent program will update the internal agent state while only moving forward.
     	// START HERE - code below should be modified!
+
+		if (state.agent_last_action==state.ACTION_TURN_LEFT) {
+		    state.agent_direction = ((state.agent_direction-1) % 4);
+		    if (state.agent_direction<0) 
+		    	state.agent_direction +=4;
+		}
+		else if (state.agent_last_action==state.ACTION_TURN_RIGHT) {
+			state.agent_direction = ((state.agent_direction+1) % 4);
+			System.out.println("About to turn right, agent_direction=" + state.agent_direction);
+		}
     	    	
     	System.out.println("x=" + state.agent_x_position);
     	System.out.println("y=" + state.agent_y_position);
