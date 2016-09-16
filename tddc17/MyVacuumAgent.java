@@ -262,8 +262,16 @@ class MyAgentProgram implements AgentProgram {
 				}
 				else if ((state.agent_last_action == state.ACTION_MOVE_FORWARD)) {
 					state.old_action = state.agent_last_action;
-					state.agent_last_action=state.ACTION_TURN_RIGHT;
-					return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+					if (bump) {
+						state.old_action = state.agent_last_action;
+						state.agent_last_action=state.ACTION_TURN_RIGHT;
+						return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+					}
+					else {
+						state.old_action = state.agent_last_action;
+						state.agent_last_action=state.ACTION_TURN_LEFT;
+						return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+					}
 				}
 				else if (state.agent_last_action == state.ACTION_TURN_RIGHT) {
 					state.old_action = state.agent_last_action;
