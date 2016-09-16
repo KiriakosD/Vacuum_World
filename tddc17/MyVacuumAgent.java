@@ -39,12 +39,14 @@ import java.util.Random;
 class MyAgentState
 {
 	public int[][] world = new int[30][30];
+	public int[][] memory = new int[30][30]; // Table used for internal memory.
 	public int initialized = 0;
 	final int UNKNOWN 	= 0;
 	final int WALL 		= 1;
 	final int CLEAR 	= 2;
 	final int DIRT		= 3;
 	final int HOME		= 4;
+	final int MAXIY		= 5; // Marks the block with the max (or rather min) Y
 	final int ACTION_NONE 			= 0;
 	final int ACTION_MOVE_FORWARD 	= 1;
 	final int ACTION_TURN_RIGHT 	= 2;
@@ -54,7 +56,7 @@ class MyAgentState
 	public int agent_x_position = 1;
 	public int agent_y_position = 1;
 	public int agent_last_action = ACTION_NONE;
-	public int old_action = ACTION_NONE;
+	public int agent_old_action = ACTION_NONE; // Holds the action that happened before the agent_last_action
 	
 	public static final int NORTH = 0;
 	public static final int EAST = 1;
@@ -63,6 +65,8 @@ class MyAgentState
 	public int agent_direction = EAST;
 
 	public int stage = 0;
+	public int maxY = 21; // Holds the max (or rather min) Y position; the value 21 is just a random big (unreachable) number to start with.
+	public int xOfMaxY = 0; // Holds the X position of the max Y
 	
 	MyAgentState()
 	{
@@ -100,8 +104,27 @@ class MyAgentState
 	public void updateWorld(int x_position, int y_position, int info)
 	{
 		world[x_position][y_position] = info;
+		if (memory[x_position][y_position] != MAXIY) {
+			memory[x_position][y_position] = info;
+		}
 	}
 	
+	/* A method that calculates the number of explored blocks */
+	public int calculateExplored() {
+		int explored = 0;
+		for (int i=0; i < world.length; i++)
+		{
+			for (int j=0; j < world[i].length ; j++)
+			{
+				if (world[j][i]==WALL)
+					explored+=1;
+				else if (world[j][i]==CLEAR)
+					explored+=1;
+			}
+		}
+		return explored;
+	}
+
 	public void printWorldDebug()
 	{
 		for (int i=0; i < world.length; i++)
@@ -236,9 +259,28 @@ class MyAgentProgram implements AgentProgram {
 	    } 
 	    else
 	    {
+	    	// Updating the MAXIY position, perhaps it should be moved to another place
+			if (state.agent_y_position < state.maxY) {
+				if (state.xOfMaxY != 0) {
+					state.memory[state.xOfMaxY][state.maxY] = state.CLEAR;
+				}
+				state.maxY=state.agent_y_position;
+				state.xOfMaxY=state.agent_x_position;
+				state.memory[state.agent_x_position][state.agent_y_position] = state.MAXIY;
+			}
+
+			// Checking if we should go to stage 2
+	    	if ((state.memory[state.agent_x_position][state.agent_y_position] == state.MAXIY) && (state.stage == 1)) {
+	    		if (state.calculateExplored() > 25) {
+	    			state.stage = 2;
+	    		}
+	    	}
+
+	    	// Checking if we should go to stage 1 
 			if ((bump) && (state.stage == 0)) {
 				state.stage = 1;
 	    	}
+
 			if (state.stage == 0) {
 				System.out.println("stage = 0!!!");
 				if (state.agent_direction == state.NORTH) {
@@ -289,8 +331,12 @@ class MyAgentProgram implements AgentProgram {
 					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 				}
 			}
-			state.agent_last_action=state.ACTION_MOVE_FORWARD;
-			return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+			else if (state.stage == 2) {
+				// Not sure how to proceed after we reach stage 2
+				System.out.println("stage = 2!!!");
+				return NoOpAction.NO_OP;
+			}
+			return NoOpAction.NO_OP; // Must be removed
 		}
 	}
 }
